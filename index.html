@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Enviar NF - Depósito Padrão</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      max-width: 500px;
+      margin: auto;
+    }
+    input, textarea, button {
+      display: block;
+      margin-top: 10px;
+      width: 100%;
+      padding: 8px;
+    }
+    #msg {
+      margin-top: 15px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h3>Enviar NF para Depósito Padrão</h3>
+  <label for="nf">NF:</label>
+  <input type="text" id="nf" />
+
+  <label for="descricao">Descrição:</label>
+  <textarea id="descricao"></textarea>
+
+  <button onclick="enviar()">Enviar</button>
+  <p id="msg"></p>
+
+  <script>
+    function enviar() {
+      const nf = document.getElementById("nf").value;
+      const descricao = document.getElementById("descricao").value;
+      const msg = document.getElementById("msg");
+
+      if (!nf || !descricao) {
+        msg.textContent = "Preencha todos os campos!";
+        return;
+      }
+
+      fetch("https://script.google.com/macros/s/AKfycbzfaY9ckK1hT6MVUSZT0qrViqZhGi94RnhJnsX_C9pEx7aEXMSTDnnelDX9JWHl5E3JQA/exec", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ nf, descricao })
+      })
+      .then(res => res.text())
+      .then(data => {
+        msg.textContent = data;
+        document.getElementById("nf").value = "";
+        document.getElementById("descricao").value = "";
+      })
+      .catch(err => {
+        msg.textContent = "Erro ao enviar: " + err;
+        console.error(err);
+      });
+    }
+  </script>
+</body>
+</html>
